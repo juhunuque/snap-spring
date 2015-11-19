@@ -1,6 +1,7 @@
 package org.training.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.training.domain.Department;
 import org.training.repositories.DepartmentRepository;
@@ -9,6 +10,7 @@ import org.training.repositories.DepartmentRepository;
 public class DefaultDepartmentService implements DepartmentService {
 
     @Autowired
+    @Qualifier("default")
     private DepartmentRepository departmentRepository;
 
     @Override
@@ -31,6 +33,7 @@ public class DefaultDepartmentService implements DepartmentService {
         departmentRepository.delete(deptId);
     }
 
+    /*
     public DepartmentRepository getDepartmentRepository() {
         return departmentRepository;
     }
@@ -38,4 +41,5 @@ public class DefaultDepartmentService implements DepartmentService {
     public void setDepartmentRepository(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
     }
+    */
 }

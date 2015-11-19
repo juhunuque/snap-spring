@@ -1,5 +1,6 @@
 package org.training.repositories;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.training.controllers.exceptions.DepartmentNotFoundException;
 import org.training.domain.Department;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
+@Qualifier("default")
 public class DefaultDepartmentRepository implements DepartmentRepository {
 
     private AtomicInteger nextId = new AtomicInteger(0);

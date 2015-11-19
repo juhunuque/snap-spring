@@ -11,7 +11,7 @@
         <property name="password" value="demo"/>
     </bean>
 
-    <bean id="departmentRepository" class="org.training.repositories.JDBCDepartmentRepository">
+    <bean id="departmentRepository" class="org.training.repositories.JdbcDepartmentRepository">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
