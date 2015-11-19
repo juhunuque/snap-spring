@@ -1,60 +1,63 @@
 package org.training.controllers;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.training.controllers.exceptions.DepartmentNotFoundException;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.training.controllers.exceptions.InvalidPayloadException;
+import org.training.domain.Department;
+import org.training.repositories.DefaultDepartmentRepository;
+import org.training.repositories.DepartmentRepository;
 
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
 
+    private DepartmentRepository repository = new DefaultDepartmentRepository();
 
-    private AtomicInteger nextId = new AtomicInteger(0);
-    private Map<Integer, String> repository = new HashMap<>();
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getDepartmentName(@PathVariable Integer id) {
-        if (!repository.containsKey(id)) {
-            return new ResponseEntity<>(
-                String.format("Department %s does not exist", id),
-                HttpStatus.NOT_FOUND
-            );
-        }
-        return new ResponseEntity<>(repository.get(id), HttpStatus.OK);
+    @RequestMapping(
+        value = "/{id}",
+        method = RequestMethod.GET,
+        produces = {"application/json", "application/xml"}
+    )
+    public Department getDepartment(@PathVariable Integer id) {
+        return repository.findOne(id);
     }
 
+    // POST http://localhost:8080/api/department/ {body: JSON/XML}
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
+    @RequestMapping(
+        method = RequestMethod.POST,
+        produces = {"application/json", "application/xml"},
+        consumes = {"application/json", "application/xml"}
+    )
     @ResponseStatus(HttpStatus.CREATED)
-    public String createDepartment(@PathVariable String name) {
-        Integer id = nextId.incrementAndGet();
-        repository.put(id, name);
-        return id.toString();
+    public Department createDepartment(@RequestBody Department department) {
+        if (department.getId() != null) {
+            throw new InvalidPayloadException(department);
+        }
+        return repository.save(department);
     }
 
-    // http://localhost:8080/api/department/1?name=Engineering
+    // PUT http://localhost:8080/api/department/1 {body JSON/XML}
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(
+        path = "/{id}",
+        method = RequestMethod.PUT,
+        produces = {"application/json", "application/xml"},
+        consumes = {"application/json", "application/xml"}
+    )
     @ResponseStatus(HttpStatus.OK)
-    public String updateDepartment(@PathVariable Integer id, @RequestParam String name) {
-        if (!repository.containsKey(id)) {
-            throw new DepartmentNotFoundException(id);
+    public Department updateDepartment(@PathVariable Integer id, @RequestBody Department department) {
+        if(!id.equals(department.getId())){
+            throw new InvalidPayloadException(department);
         }
-        repository.put(id, name);
-        return name;
+        return repository.save(department);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Integer id) {
-        repository.remove(id);
+        repository.delete(id);
     }
-
 
 
 }
