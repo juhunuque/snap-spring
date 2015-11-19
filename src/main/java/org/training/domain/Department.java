@@ -1,11 +1,15 @@
 package org.training.domain;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Department {
 
     private Integer id;
+
+    @NotBlank
     private String name;
 
     public Integer getId() {

@@ -2,10 +2,18 @@ package org.training.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.training.controllers.exceptions.InvalidPayloadException;
 import org.training.domain.Department;
 import org.training.services.DepartmentService;
+
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/department")
@@ -31,11 +39,36 @@ public class DepartmentController {
         consumes = {"application/json", "application/xml"}
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Department createDepartment(@RequestBody Department department) {
+    public Department createDepartment(@RequestBody @Valid Department department, BindingResult binding) {
         if (department.getId() != null) {
             throw new InvalidPayloadException(department);
         }
+        if(binding.hasErrors()) {
+            throw new InvalidPayloadException(getValidationMessage(binding));
+        }
         return departmentService.createDepartment(department);
+    }
+
+    private static List<String> getValidationMessage(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return bindingResult.getAllErrors()
+                .stream()
+                .map(DepartmentController::getValidationMessage)
+                .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    private static String getValidationMessage(ObjectError error) {
+        if (error instanceof FieldError) {
+            FieldError fieldError = (FieldError) error;
+            String className = fieldError.getObjectName();
+            String property = fieldError.getField();
+            Object invalidValue = fieldError.getRejectedValue();
+            String message = fieldError.getDefaultMessage();
+            return String.format("%s.%s %s, but it was %s", className, property, message, invalidValue);
+        }
+        return String.format("%s: %s", error.getObjectName(), error.getDefaultMessage());
     }
 
     // PUT http://localhost:8080/api/department/1 {body JSON/XML}
