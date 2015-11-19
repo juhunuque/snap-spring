@@ -8,6 +8,8 @@ public interface DepartmentRepository {
 
     Department save(Department department);
 
+    boolean exists(Integer deptId);
+
     void delete(Integer deptId);
 
 }
