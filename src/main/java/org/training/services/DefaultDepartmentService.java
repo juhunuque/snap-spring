@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.training.domain.Department;
-import org.training.repositories.DepartmentRepository;
+import org.training.repositories.BestDepartmentRepository;
+
+import java.util.List;
 
 @Service
 public class DefaultDepartmentService implements DepartmentService {
@@ -14,8 +17,8 @@ public class DefaultDepartmentService implements DepartmentService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    @Qualifier("jpa")
-    private DepartmentRepository departmentRepository;
+    @Qualifier("best")
+    private BestDepartmentRepository departmentRepository;
 
     @Override
     public Department getDepartmentById(int deptId) {
@@ -24,6 +27,7 @@ public class DefaultDepartmentService implements DepartmentService {
     }
 
     @Override
+    @Transactional
     public Department createDepartment(Department department) {
         return departmentRepository.save(department);
     }
@@ -36,6 +40,11 @@ public class DefaultDepartmentService implements DepartmentService {
     @Override
     public void deleteDepartment(int deptId) {
         departmentRepository.delete(deptId);
+    }
+
+    @Override
+    public List<Department> getDepartmentsByName(String name) {
+        return departmentRepository.findByNameLike(String.format("%s%%", name));
     }
 
     /*

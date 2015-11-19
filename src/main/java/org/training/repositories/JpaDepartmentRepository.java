@@ -2,6 +2,7 @@ package org.training.repositories;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.training.domain.Department;
 
 import javax.persistence.EntityManager;
@@ -25,11 +26,13 @@ public class JpaDepartmentRepository implements DepartmentRepository {
     }
 
     @Override
+    @Transactional
     public Department save(Department department) {
         return entityManager.merge(department);
     }
 
     @Override
+    @Transactional
     public void delete(Integer deptId) {
         Department dept = entityManager.find(Department.class, deptId);
         if (dept != null) {

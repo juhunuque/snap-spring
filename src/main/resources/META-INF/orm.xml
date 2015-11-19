@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        version="2.1">
+
+    <named-query name="DepartmentByNameLike">
+        <query>
+            SELECT d FROM Department d WHERE d.name LIKE :deptName
+        </query>
+    </named-query>
+
+</entity-mappings>

@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
@@ -29,6 +31,16 @@ public class DepartmentController {
     )
     public Department getDepartment(@PathVariable Integer id) {
         return departmentService.getDepartmentById(id);
+    }
+
+
+    @RequestMapping(
+        method = GET,
+        produces = {"application/json", "application/xml"}
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<Department> getDepartmentName(@RequestParam String name) {
+        return departmentService.getDepartmentsByName(name);
     }
 
     // POST http://localhost:8080/api/department/ {body: JSON/XML}
