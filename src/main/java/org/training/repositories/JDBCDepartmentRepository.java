@@ -1,15 +1,19 @@
 package org.training.repositories;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 import org.training.domain.Department;
 
 import javax.sql.DataSource;
 
-public class JDBCDepartmentRepository implements DepartmentRepository {
+@Repository
+@Qualifier("jdbc")
+public class JdbcDepartmentRepository implements DepartmentRepository {
 
     private final DataSource dataSource;
 
     //TODO: remove coupling
-    public JDBCDepartmentRepository(DataSource dataSource) {
+    public JdbcDepartmentRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
