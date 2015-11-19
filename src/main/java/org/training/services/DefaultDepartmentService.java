@@ -1,10 +1,14 @@
 package org.training.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.training.domain.Department;
 import org.training.repositories.DepartmentRepository;
 
+@Service
 public class DefaultDepartmentService implements DepartmentService {
 
+    @Autowired
     private DepartmentRepository departmentRepository;
 
     @Override

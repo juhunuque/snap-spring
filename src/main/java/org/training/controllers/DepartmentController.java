@@ -1,18 +1,18 @@
 package org.training.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.training.controllers.exceptions.InvalidPayloadException;
 import org.training.domain.Department;
-import org.training.services.DefaultDepartmentService;
 import org.training.services.DepartmentService;
 
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
 
-    //TODO: remove coupling
-    private DepartmentService departmentService = new DefaultDepartmentService();
+    @Autowired
+    private DepartmentService departmentService;
 
     @RequestMapping(
         value = "/{id}",
