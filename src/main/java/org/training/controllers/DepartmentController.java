@@ -4,14 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.training.controllers.exceptions.InvalidPayloadException;
 import org.training.domain.Department;
-import org.training.repositories.DefaultDepartmentRepository;
-import org.training.repositories.DepartmentRepository;
+import org.training.services.DefaultDepartmentService;
+import org.training.services.DepartmentService;
 
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
 
-    private DepartmentRepository repository = new DefaultDepartmentRepository();
+    //TODO: remove coupling
+    private DepartmentService departmentService = new DefaultDepartmentService();
 
     @RequestMapping(
         value = "/{id}",
@@ -19,7 +20,7 @@ public class DepartmentController {
         produces = {"application/json", "application/xml"}
     )
     public Department getDepartment(@PathVariable Integer id) {
-        return repository.findOne(id);
+        return departmentService.getDepartmentById(id);
     }
 
     // POST http://localhost:8080/api/department/ {body: JSON/XML}
@@ -34,7 +35,7 @@ public class DepartmentController {
         if (department.getId() != null) {
             throw new InvalidPayloadException(department);
         }
-        return repository.save(department);
+        return departmentService.createDepartment(department);
     }
 
     // PUT http://localhost:8080/api/department/1 {body JSON/XML}
@@ -50,13 +51,13 @@ public class DepartmentController {
         if(!id.equals(department.getId())){
             throw new InvalidPayloadException(department);
         }
-        return repository.save(department);
+        return departmentService.updateDepartment(department);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable Integer id) {
-        repository.delete(id);
+        departmentService.deleteDepartment(id);
     }
 
 
