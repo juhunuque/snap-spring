@@ -6,8 +6,6 @@ import org.training.domain.Department;
 
 import javax.sql.DataSource;
 
-@Repository
-@Qualifier("jdbc")
 public class JdbcDepartmentRepository implements DepartmentRepository {
 
     private final DataSource dataSource;
