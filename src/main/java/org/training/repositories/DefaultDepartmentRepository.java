@@ -36,6 +36,11 @@ public class DefaultDepartmentRepository implements DepartmentRepository {
     }
 
     @Override
+    public boolean exists(Integer deptId) {
+        return repository.containsKey(deptId);
+    }
+
+    @Override
     public void delete(Integer deptId) {
         repository.remove(deptId);
     }

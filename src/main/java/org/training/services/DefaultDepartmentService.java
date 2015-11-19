@@ -14,7 +14,7 @@ public class DefaultDepartmentService implements DepartmentService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    @Qualifier("default")
+    @Qualifier("jpa")
     private DepartmentRepository departmentRepository;
 
     @Override
