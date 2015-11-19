@@ -1,5 +1,7 @@
 package org.training.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -9,12 +11,15 @@ import org.training.repositories.DepartmentRepository;
 @Service
 public class DefaultDepartmentService implements DepartmentService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     @Qualifier("default")
     private DepartmentRepository departmentRepository;
 
     @Override
     public Department getDepartmentById(int deptId) {
+        logger.trace("Finding department {}", deptId);
         return departmentRepository.findOne(deptId);
     }
 
